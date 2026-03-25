@@ -37,11 +37,13 @@ packadd("nvim-treesitter")
 packadd("gitsigns.nvim")
 packadd("mini.nvim")
 packadd("fzf-lua")
+require("fzf-lua").register_ui_select()
 
 -- LSP
 packadd("nvim-lspconfig")
 packadd("mason.nvim")
 packadd("efmls-configs-nvim")
 packadd("blink.cmp")
+packadd("blink-cmp-dictionary")
 packadd("LuaSnip")
 require("lsp")

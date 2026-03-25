@@ -64,7 +64,17 @@ local function lsp_on_attach(ev)
 		vim.lsp.buf.definition()
 	end, opts)
 
-	vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+	vim.keymap.set("n", "<leader>ca", function()
+		require("fzf-lua").lsp_code_actions({
+			winopts = {
+				relative = "cursor",
+				width = 0.5,
+				height = 0.3,
+				row = 1,
+				col = 0,
+			},
+		})
+	end, opts)
 	vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
 	vim.keymap.set("n", "<leader>D", function()
@@ -135,7 +145,29 @@ require("blink.cmp").setup({
 	},
 	appearance = { nerd_font_variant = "mono" },
 	completion = { menu = { auto_show = true } },
-	sources = { default = { "lsp", "path", "buffer", "snippets" } },
+
+	sources = {
+		default = { "lsp", "path", "buffer", "snippets" },
+
+		per_filetype = {
+			markdown = { "lsp", "path", "buffer", "snippets", "dictionary" },
+			text = { "lsp", "path", "buffer", "snippets", "dictionary" },
+		},
+
+		providers = {
+			dictionary = {
+				module = "blink-cmp-dictionary",
+				name = "Dict",
+				min_keyword_length = 2,
+				opts = {
+					dictionary_files = {
+						vim.fn.expand("~/.config/nvim/dictionary/en.txt"),
+					},
+				},
+			},
+		},
+	},
+
 	snippets = {
 		expand = function(snippet)
 			require("luasnip").lsp_expand(snippet)
@@ -151,6 +183,19 @@ require("blink.cmp").setup({
 vim.lsp.config["*"] = {
 	capabilities = require("blink.cmp").get_lsp_capabilities(),
 }
+
+vim.lsp.config("harper_ls", {
+	filetypes = { "markdown", "text" },
+	settings = {
+		["harper-ls"] = {
+			linters = {
+				spell_check = true,
+				sentence_capitalization = true,
+				repeated_words = true,
+			},
+		},
+	},
+})
 
 vim.lsp.config("lua_ls", {
 	settings = {
@@ -239,6 +284,7 @@ vim.lsp.enable({
 	"gopls",
 	"clangd",
 	"efm",
+	"harper_ls",
 })
 
 return M

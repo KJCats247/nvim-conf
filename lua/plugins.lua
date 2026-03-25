@@ -21,6 +21,7 @@ vim.pack.add({
 		src = "https://github.com/saghen/blink.cmp",
 		version = vim.version.range("1.*"),
 	},
+	"https://github.com/Kaiser-Yang/blink-cmp-dictionary",
 	"https://github.com/L3MON4D3/LuaSnip",
 })
 
