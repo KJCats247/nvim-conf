@@ -38,6 +38,9 @@ packadd("gitsigns.nvim")
 packadd("mini.nvim")
 packadd("fzf-lua")
 require("fzf-lua").register_ui_select()
+packadd("zen-mode.nvim")
+packadd("plenary.nvim")
+packadd("render-markdown.nvim")
 
 -- LSP
 packadd("nvim-lspconfig")
@@ -47,3 +50,13 @@ packadd("blink.cmp")
 packadd("blink-cmp-dictionary")
 packadd("LuaSnip")
 require("lsp")
+
+--Debugger C
+packadd("nvim-dap")
+packadd("nvim-dap-ui")
+packadd("nvim-dap-virtual-text")
+packadd("nvim-nio")
+
+--Emails
+packadd("nui.nvim")
+packadd("himalaya.nvim")

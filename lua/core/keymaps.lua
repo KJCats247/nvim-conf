@@ -76,3 +76,15 @@ end, { desc = "Copy full file path" })
 vim.keymap.set("n", "<leader>td", function()
 	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, { desc = "Toggle diagnostics" })
+
+vim.keymap.set("n", "<C-S-k>", "<C-k>", { desc = "Special literal codes" })
+
+vim.keymap.set("n", "<leader>tp", function()
+	vim.cmd("TypstPreviewToggle")
+end, { desc = "Toggle Typst Preview" })
+
+vim.keymap.set("n", "<leader>mp", function()
+	vim.cmd("MarkdownPreviewToggle")
+end, { desc = "Toggle Markdown Preview" })
+
+vim.keymap.set("n", "<leader>m", ":Himalaya<CR>", { desc = "Himalaya Mail öffnen" })

@@ -33,6 +33,7 @@ vim.opt.synmaxcol = 300 -- syntax highlighting limit
 vim.opt.fillchars = { eob = " " } -- hide "~" on empty lines
 
 local undodir = vim.fn.expand("~/.vim/undodir")
+vim.opt.spellfile = vim.fn.stdpath("config") .. "/spell/custom.utf-8.add"
 if
 	vim.fn.isdirectory(undodir) == 0 -- create undodir if nonexistent
 then

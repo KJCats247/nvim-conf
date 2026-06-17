@@ -4,7 +4,26 @@
 
 local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 
--- Format on save (ONLY real file buffers, ONLY when efm is attached)
+vim.api.nvim_create_autocmd("BufNewFile", {
+	pattern = "*.h",
+	callback = function()
+		local filename = vim.fn.expand("%:t")
+
+		local macro_name = string.upper(filename):gsub("%.", "_")
+
+		local lines = {
+			"#ifndef " .. macro_name,
+			"#define " .. macro_name,
+			"",
+			"#endif // !" .. macro_name,
+		}
+
+		vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+
+		vim.api.nvim_win_set_cursor(0, { 3, 0 })
+	end,
+})
+
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = augroup,
 	pattern = {
@@ -65,7 +84,30 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown", "text" },
 	callback = function()
 		vim.opt_local.spell = true
-		vim.opt_local.spelllang = "en"
+		vim.opt_local.spelllang = { "de_de", "en_us" }
+		vim.opt_local.wrap = true
+		vim.opt_local.linebreak = true
+	end,
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if client and client.name == "harper_ls" and vim.bo[args.buf].filetype == "markdown" then
+			vim.lsp.buf_detach_client(args.buf, client.id)
+		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "typst" },
+	callback = function()
+		vim.opt_local.spell = true
+		vim.opt_local.spelllang = { "de_de", "en_us" }
+
+		vim.opt_local.wrap = true
+		vim.opt_local.linebreak = true
+		vim.opt_local.synmaxcol = 1000
 	end,
 })
 

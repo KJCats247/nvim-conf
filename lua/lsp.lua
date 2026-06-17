@@ -211,6 +211,15 @@ vim.lsp.config("ts_ls", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
 
+vim.lsp.config("marksman", {})
+
+vim.lsp.config("tinymist", {
+	settings = {
+		exportPdf = "onType",
+		formatterMode = "typstyle",
+	},
+})
+
 do
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
@@ -248,6 +257,7 @@ do
 			"sh",
 			"typescript",
 			"typescriptreact",
+			"typst",
 			"vue",
 			"svelte",
 		},
@@ -269,6 +279,7 @@ do
 				sh = { shellcheck, shfmt },
 				typescript = { eslint_d, prettier_d },
 				typescriptreact = { eslint_d, prettier_d },
+				typst = { prettypst },
 				vue = { eslint_d, prettier_d },
 				svelte = { eslint_d, prettier_d },
 			},
@@ -285,6 +296,8 @@ vim.lsp.enable({
 	"clangd",
 	"efm",
 	"harper_ls",
+	"maksman",
+	"tinymist",
 })
 
 return M

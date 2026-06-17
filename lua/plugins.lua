@@ -23,6 +23,25 @@ vim.pack.add({
 	},
 	"https://github.com/Kaiser-Yang/blink-cmp-dictionary",
 	"https://github.com/L3MON4D3/LuaSnip",
+	"https://github.com/folke/zen-mode.nvim",
+	"https://github.com/nvim-lua/plenary.nvim",
+	-- Debugger C
+	"https://github.com/mfussenegger/nvim-dap",
+	"https://github.com/rcarriga/nvim-dap-ui",
+	"https://github.com/theHamsta/nvim-dap-virtual-text",
+	"https://github.com/nvim-neotest/nvim-nio",
+	-- Typst Preview
+	{
+		src = "https://github.com/chomosuke/typst-preview.nvim",
+		build = function()
+			require("typst-preview").update()
+		end,
+	},
+	-- Markdown
+	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
+	-- Emails
+	"https://github.com/MunifTanjim/nui.nvim",
+	"https://github.com/knownasnaffy/himalaya.nvim",
 })
 
 -- ============================================================================
@@ -49,11 +68,13 @@ local setup_treesitter = function()
 			"json",
 			"lua",
 			"markdown",
+			"markdown_inline",
 			"python",
 			"typescript",
 			"vue",
 			"svelte",
 			"bash",
+			"typst",
 		},
 
 		sync_install = false,
@@ -116,6 +137,28 @@ require("gitsigns").setup({
 	current_line_blame = false,
 })
 
+require("zen-mode").setup({
+	window = {
+		backdrop = 1,
+		width = 80,
+		options = {
+			signcolumn = "no",
+			number = false,
+			relativenumber = false,
+			foldcolumn = "0",
+			list = false,
+		},
+	},
+	plugins = {
+		gitsigns = { enabled = true },
+		tmux = { enabled = false },
+	},
+})
+
+vim.keymap.set("n", "<leader>z", function()
+	require("zen-mode").toggle()
+end, { desc = "Toggle Zen Mode" })
+
 require("mason").setup({})
 
 vim.keymap.set("n", "]g", function()
@@ -142,5 +185,75 @@ end, { desc = "Toggle inline blame" })
 vim.keymap.set("n", "<leader>gd", function()
 	require("gitsigns").diffthis()
 end, { desc = "Diff this" })
+
+-- Debugger C
+local dap = require("dap")
+local dapui = require("dapui")
+
+require("nvim-dap-virtual-text").setup({})
+dapui.setup()
+
+dap.adapters.gdb = {
+	type = "executable",
+	command = "gdb",
+	args = { "-i", "dap" },
+}
+
+dap.configurations.c = {
+	{
+		name = "Launch",
+		type = "gdb",
+		request = "launch",
+		program = function()
+			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+		end,
+		cwd = "${workspaceFolder}",
+		stopAtBeginningOfMainSubprogram = false,
+	},
+}
+
+dap.configurations.asm = {
+	{
+		name = "Launch File",
+		type = "gdb",
+		request = "launch",
+		program = function()
+			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+		end,
+		cwd = "${workspaceFolder}",
+		stopAtBeginningOfMainSubprogram = true,
+	},
+}
+dap.configurations.nasm = dap.configurations.asm
+
+dap.listeners.after.event_initialized["dapui_config"] = function()
+	dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+	dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+	dapui.close()
+end
+
+vim.keymap.set("n", "<F5>", function()
+	dap.continue()
+end, { desc = "Debug: Start/Continue" })
+vim.keymap.set("n", "<F10>", function()
+	dap.step_over()
+end, { desc = "Debug: Step Over" })
+vim.keymap.set("n", "<F11>", function()
+	dap.step_into()
+end, { desc = "Debug: Step Into" })
+vim.keymap.set("n", "<leader>db", function()
+	dap.toggle_breakpoint()
+end, { desc = "Debug: Toggle Breakpoint" })
+vim.keymap.set("n", "<leader>du", function()
+	dapui.toggle()
+end, { desc = "Debug: Toggle UI" })
+
+require("render-markdown").setup({})
+
+require("himalaya").setup({})
 
 return M
