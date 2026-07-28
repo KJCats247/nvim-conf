@@ -8,6 +8,10 @@ vim.keymap.set("n", "<leader>e", function()
 	vim.cmd("Explore")
 end, { silent = true, desc = "Open Explore" })
 
+vim.keymap.set("n", "<leader>a", function()
+	vim.cmd("Alpha")
+end, { silent = true, desc = "Open Alpha" })
+
 vim.keymap.set("n", "<leader>fc", function()
 	require("fzf-lua").git_bcommits()
 end, { desc = "FZF Buffer Commits (Historie der Datei)" })
@@ -17,6 +21,7 @@ vim.keymap.set("n", "<leader>fC", function()
 end, { desc = "FZF Git Commits (Ganzes Repo)" })
 
 vim.keymap.set("n", "<leader>rc", ":e ~/.config/nvim/<CR>", { desc = "Edit Config" })
+vim.keymap.set("n", "<leader>nx", ":e ~/nixos-config/<CR>", { desc = "Edit Config" })
 
 vim.keymap.set("n", "<leader>y", '"+y', { desc = "Copy to clipboard" })
 

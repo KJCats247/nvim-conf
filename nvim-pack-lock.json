@@ -4,6 +4,10 @@
       "rev": "dae4f5aaa3574bd0c2b9dd20fb9542a02c10471c",
       "src": "https://github.com/L3MON4D3/LuaSnip"
     },
+    "alpha-nvim": {
+      "rev": "6c6a89d5b068b5251c8bdf0dd57bb921bcfeeb09",
+      "src": "https://github.com/goolord/alpha-nvim"
+    },
     "blink-cmp-dictionary": {
       "rev": "35142bba869b869715e91a99d2f46bcf93fca4ae",
       "src": "https://github.com/Kaiser-Yang/blink-cmp-dictionary"

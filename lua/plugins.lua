@@ -13,6 +13,10 @@ vim.pack.add({
 		branch = "main",
 		build = ":TSUpdate",
 	},
+
+	-- Dashboards & Animations
+	"https://github.com/goolord/alpha-nvim",
+
 	-- Language Server Protocols
 	"https://www.github.com/neovim/nvim-lspconfig",
 	"https://github.com/mason-org/mason.nvim",
@@ -25,11 +29,13 @@ vim.pack.add({
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/folke/zen-mode.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
+
 	-- Debugger C
 	"https://github.com/mfussenegger/nvim-dap",
 	"https://github.com/rcarriga/nvim-dap-ui",
 	"https://github.com/theHamsta/nvim-dap-virtual-text",
 	"https://github.com/nvim-neotest/nvim-nio",
+
 	-- Typst Preview
 	{
 		src = "https://github.com/chomosuke/typst-preview.nvim",
@@ -37,8 +43,10 @@ vim.pack.add({
 			require("typst-preview").update()
 		end,
 	},
+
 	-- Markdown
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
+
 	-- Emails
 	"https://github.com/MunifTanjim/nui.nvim",
 	"https://github.com/knownasnaffy/himalaya.nvim",
@@ -47,7 +55,6 @@ vim.pack.add({
 -- ============================================================================
 -- PLUGIN CONFIGS
 -- ============================================================================
-
 local setup_treesitter = function()
 	local status_ok, configs = pcall(require, "nvim-treesitter.configs")
 	if not status_ok then
@@ -75,12 +82,10 @@ local setup_treesitter = function()
 			"svelte",
 			"bash",
 			"typst",
+			"nix",
 		},
-
 		sync_install = false,
-
 		auto_install = true,
-
 		highlight = {
 			enable = true,
 			additional_vim_regex_highlighting = false,
@@ -91,7 +96,6 @@ end
 setup_treesitter()
 
 require("fzf-lua").setup({})
-
 vim.keymap.set("n", "<leader>ff", function()
 	require("fzf-lua").files()
 end, { desc = "FZF Files" })
@@ -122,16 +126,37 @@ require("mini.trailspace").setup({})
 require("mini.bufremove").setup({})
 require("mini.notify").setup({})
 require("mini.icons").setup({})
-require("mini.starter").setup({})
+
+local alpha = require("alpha")
+local dashboard = require("alpha.themes.dashboard")
+
+dashboard.section.header.val = {}
+
+dashboard.section.buttons.val = {
+	dashboard.button("f", "  Find File", ":FzfLua files<CR>"),
+	dashboard.button("g", "  Live Grep", ":FzfLua live_grep<CR>"),
+	dashboard.button("e", "  Explore", ":Explore<CR>"),
+	dashboard.button("n", "  New Buffer", ":edit new<CR>"),
+	dashboard.button("c", "  Edit Config", ":e ~/.config/nvim/<CR>"),
+	dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+}
+
+dashboard.section.footer.val = { "Work smarter and harder" }
+
+alpha.setup(dashboard.config)
+
+require("gol-alpha-dashboard")
+
+-- ============================================================================
 
 require("gitsigns").setup({
 	signs = {
-		add = { text = "\u{2590}" }, -- ▏
-		change = { text = "\u{2590}" }, -- ▐
-		delete = { text = "\u{2590}" }, -- ◦
-		topdelete = { text = "\u{25e6}" }, -- ◦
-		changedelete = { text = "\u{25cf}" }, -- ●
-		untracked = { text = "\u{25cb}" }, -- ○
+		add = { text = "▐" },
+		change = { text = "▐" },
+		delete = { text = "▐" },
+		topdelete = { text = "◖" },
+		changedelete = { text = "●" },
+		untracked = { text = "○" },
 	},
 	signcolumn = true,
 	current_line_blame = false,
@@ -253,7 +278,6 @@ vim.keymap.set("n", "<leader>du", function()
 end, { desc = "Debug: Toggle UI" })
 
 require("render-markdown").setup({})
-
 require("himalaya").setup({})
 
 return M

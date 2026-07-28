@@ -92,6 +92,7 @@ local function lsp_on_attach(ev)
 	end, opts)
 
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+	vim.keymap.set("n", "C-K", vim.lsp.buf.signature_help, opts)
 
 	vim.keymap.set("n", "<leader>fd", function()
 		require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
@@ -210,6 +211,10 @@ vim.lsp.config("bashls", {})
 vim.lsp.config("ts_ls", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
+vim.lsp.config("nil_ls", {})
+
+-- C# LSP
+vim.lsp.config("omnisharp", {})
 
 vim.lsp.config("marksman", {})
 
@@ -240,13 +245,33 @@ do
 	local go_revive = require("efmls-configs.linters.go_revive")
 	local gofumpt = require("efmls-configs.formatters.gofumpt")
 
+  local google_java_format = require("efmls-configs.formatters.google_java_format")
+
+	local blink = require("blink.cmp")
+
+	local capabilities = blink.get_lsp_capabilities()
+
+	vim.lsp.config("jdtls", {
+		capabilities = capabilities,
+
+		-- Auf NixOS kann es manchmal nötig sein, den absoluten Pfad
+		-- zur System-Binary anzugeben, falls Mason hakt:
+		-- cmd = { 'jdt-language-server' },
+	})
+
+	vim.lsp.enable("jdtls")
+
+	-- local csharpier = require("efmls-configs.formatters.csharpier") -- C# Formatter
+
 	vim.lsp.config("efm", {
 		filetypes = {
 			"c",
 			"cpp",
+			"cs",
 			"css",
 			"go",
 			"html",
+			"java",
 			"javascript",
 			"javascriptreact",
 			"json",
@@ -260,15 +285,18 @@ do
 			"typst",
 			"vue",
 			"svelte",
+			"nix",
 		},
 		init_options = { documentFormatting = true },
 		settings = {
 			languages = {
 				c = { clangfmt },
-				go = { gofumpt, go_revive },
 				cpp = { clangfmt },
+				cs = { csharpier }, -- C# Formatter in EFM registriert
 				css = { prettier_d },
+				go = { gofumpt, go_revive },
 				html = { prettier_d },
+				java = { google_java_format },
 				javascript = { eslint_d, prettier_d },
 				javascriptreact = { eslint_d, prettier_d },
 				json = { eslint_d, fixjson },
@@ -282,6 +310,7 @@ do
 				typst = { prettypst },
 				vue = { eslint_d, prettier_d },
 				svelte = { eslint_d, prettier_d },
+				nix = { nixpkgs_fmt },
 			},
 		},
 	})
@@ -294,9 +323,10 @@ vim.lsp.enable({
 	"ts_ls",
 	"gopls",
 	"clangd",
+	"omnisharp", -- C# LSP Server aktivieren
 	"efm",
 	"harper_ls",
-	"maksman",
+	"marksman",
 	"tinymist",
 })
 
