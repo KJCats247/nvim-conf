@@ -212,6 +212,18 @@ vim.lsp.config("ts_ls", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
 vim.lsp.config("nil_ls", {})
+vim.lsp.config("glslls", {})
+
+vim.filetype.add({
+	extension = {
+		vert = "glsl",
+		frag = "glsl",
+		comp = "glsl",
+		geom = "glsl",
+		tesc = "glsl",
+		tese = "glsl",
+	},
+})
 
 -- C# LSP
 vim.lsp.config("omnisharp", {})
@@ -245,7 +257,7 @@ do
 	local go_revive = require("efmls-configs.linters.go_revive")
 	local gofumpt = require("efmls-configs.formatters.gofumpt")
 
-  local google_java_format = require("efmls-configs.formatters.google_java_format")
+	local google_java_format = require("efmls-configs.formatters.google_java_format")
 
 	local blink = require("blink.cmp")
 
@@ -286,10 +298,12 @@ do
 			"vue",
 			"svelte",
 			"nix",
+			"glsl",
 		},
 		init_options = { documentFormatting = true },
 		settings = {
 			languages = {
+				glsl = { clangfmt },
 				c = { clangfmt },
 				cpp = { clangfmt },
 				cs = { csharpier }, -- C# Formatter in EFM registriert
@@ -328,6 +342,7 @@ vim.lsp.enable({
 	"harper_ls",
 	"marksman",
 	"tinymist",
+	"glslls",
 })
 
 return M
